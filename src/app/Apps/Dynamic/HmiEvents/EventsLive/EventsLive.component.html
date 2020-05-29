@@ -1,0 +1,130 @@
+<!--phone-->
+<div class="d-block d-sm-none">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th class="p-1" style="width: 5%;" scope="col">Type</th>
+        <th class="p-1" style="width: auto;" scope="col">Omschrijving</th>
+      </tr>
+    </thead>
+
+    <tbody *ngFor="let obj of lstObjects">
+      <tr>
+        <!--Type Sign-->
+        <td class="p-1 align-middle">
+          <div>
+            <ng-template [ngIf]="obj.event.type === 'Alarm'">
+              <i class="material-icons smallThump text-danger">cancel</i>
+            </ng-template>
+
+            <ng-template [ngIf]="obj.event.type === 'Waarschuwing'">
+              <i class="material-icons smallThump text-warning">error</i>
+            </ng-template>
+
+            <ng-template [ngIf]="obj.event.type === 'Melding'">
+              <i class="material-icons smallThump text-info">info</i>
+            </ng-template>
+          </div>
+        </td>
+
+        <td class="p-1 align-middle">
+          {{ obj.onTime.toLocaleDateString() }} -
+          {{ obj.onTime.toString().substring(15, 24) }}
+          <br />
+          <strong>{{ obj.event.omschrijving }}</strong>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!--Tablet-->
+<div class="d-none d-sm-block d-lg-none">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th class="p-1" style="width: 5%;" scope="col">ID</th>
+        <th class="p-1" style="width: 5%;" scope="col">Type</th>
+        <th class="p-1" style="width: 18%;" scope="col">Tijd</th>
+        <th class="p-1" style="width: auto;" scope="col">Omschrijving</th>
+      </tr>
+    </thead>
+
+    <tbody *ngFor="let obj of lstObjects">
+      <tr>
+        <!--Type Sign-->
+        <td class="p-1 align-middle">{{ obj.event.eventId }}</td>
+
+        <td class="p-1 align-middle">
+          <div>
+            <ng-template [ngIf]="obj.event.type === 'Alarm'">
+              <i class="material-icons smallThump text-danger">cancel</i>
+            </ng-template>
+
+            <ng-template [ngIf]="obj.event.type === 'Waarschuwing'">
+              <i class="material-icons smallThump text-warning">error</i>
+            </ng-template>
+
+            <ng-template [ngIf]="obj.event.type === 'Melding'">
+              <i class="material-icons smallThump text-info">info</i>
+            </ng-template>
+          </div>
+        </td>
+
+        <td class="p-1 align-middle">
+          {{ obj.onTime.toLocaleDateString() }}<br />
+          {{ obj.onTime.toString().substring(15, 24) }}
+        </td>
+
+        <td class="p-1 align-middle">{{ obj.event.omschrijving }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!--PC-->
+<div class="d-none d-lg-block">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th class="p-1" style="width: 5%;" scope="col">ID</th>
+        <th class="p-1" style="width: 5%;" scope="col">Type</th>
+        <th class="p-1" style="width: 13%;" scope="col">Tijd</th>
+        <th class="p-1" style="width: 13%;" scope="col">PLC Adres</th>
+        <th class="p-1" style="width: auto;" scope="col">Omschrijving</th>
+      </tr>
+    </thead>
+
+    <tbody *ngFor="let obj of lstObjects">
+      <tr>
+        <!--Type Sign-->
+        <td class="p-1 align-middle">{{ obj.event.eventId }}</td>
+
+        <td class="p-1 align-middle">
+          <div>
+            <ng-template [ngIf]="obj.event.type === 'Alarm'">
+              <i class="material-icons smallThump text-danger">cancel</i>
+            </ng-template>
+
+            <ng-template [ngIf]="obj.event.type === 'Waarschuwing'">
+              <i class="material-icons smallThump text-warning">error</i>
+            </ng-template>
+
+            <ng-template [ngIf]="obj.event.type === 'Melding'">
+              <i class="material-icons smallThump text-info">info</i>
+            </ng-template>
+          </div>
+        </td>
+
+        <td class="p-1 align-middle">
+          {{ obj.onTime.toLocaleDateString() }}<br />
+          {{ obj.onTime.toString().substring(15, 24) }}
+        </td>
+
+        <td class="p-1 align-middle">{{ obj.event.plcAdress }}</td>
+
+        <td class="p-1 align-middle">{{ obj.event.omschrijving }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

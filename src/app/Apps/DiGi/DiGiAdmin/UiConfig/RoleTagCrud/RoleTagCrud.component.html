@@ -1,0 +1,94 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm">
+      <div class="container-fluid">
+        <div class="row">
+          <!--een Item weergeven-->
+          <div class="container-fluid" *ngFor="let obj of listRoleTags">
+            <br />
+            <div class="modal-content shadow">
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col">
+                    <h5>{{ obj.naam }}</h5>
+                    <h6>{{ obj.beschrijving }}</h6>
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button
+                  (click)="LoadUpdate(obj)"
+                  type="button"
+                  class="btn btn-warning"
+                >
+                  <i class="material-icons small">edit</i>
+                </button>
+
+                <button
+                  (click)="Delete(obj)"
+                  type="button"
+                  class="btn btn-danger"
+                >
+                  <i class="material-icons small">clear</i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm">
+      <div class="container-fluid">
+        <form [formGroup]="form" (ngSubmit)="Formsubmit()">
+          <fieldset>
+            <legend>Rol Tag</legend>
+            <div class="form-group row"></div>
+            <!--ID-->
+            <div class="form-group">
+              <input
+                type="text"
+                formControlName="txtid"
+                class="form-control"
+                hidden="true"
+              />
+            </div>
+
+            <!--Naam veld-->
+            <div class="form-group">
+              <label for="lblNaam">Role Tag Naam: </label>
+              <input
+                [ngClass]="{
+                  'is-invalid': form.get('txtNaam').errors
+                }"
+                type="text"
+                formControlName="txtNaam"
+                class="form-control"
+                placeholder="Role Tag Naam"
+              />
+              <div class="invalid-feedback">Naam verplicht</div>
+            </div>
+
+            <!--Beschrijkving veld-->
+            <div class="form-group">
+              <label for="lblBeschrijving">Beschrijving: </label>
+              <input
+                [ngClass]="{
+                  'is-invalid': form.get('txtBeschrijving').errors
+                }"
+                type="text"
+                formControlName="txtBeschrijving"
+                class="form-control"
+                placeholder="Beschrijving"
+              />
+              <div class="invalid-feedback">Beschrijving verplicht</div>
+            </div>
+            <!--Submit Knop-->
+            <button type="submit" class="btn btn-primary">Save</button>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

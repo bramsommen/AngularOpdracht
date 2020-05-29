@@ -1,0 +1,36 @@
+.statusBar {
+  line-height: 50px;
+}
+
+.navbar {
+}
+
+.iconHeader {
+  font-size: large;
+}
+
+.txtMiddle {
+  vertical-align: middle;
+}
+
+a {
+  text-decoration: none;
+}
+
+.headerLink {
+  cursor: pointer;
+}
+
+.menuText {
+  width: 100px;
+
+  font-size: xx-small;
+}
+
+.iconMenu {
+  font-size: 50px;
+}
+
+.menuTextContainer {
+  height: 50px;
+}

@@ -1,0 +1,126 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm">
+      <div class="container-fluid">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Naam</th>
+              <th scope="col">Omschrijving</th>
+              <th scope="col">Poolnaam</th>
+              <th scope="col">Type</th>
+            </tr>
+          </thead>
+          <tbody *ngFor="let obj of lstApps">
+            <tr>
+              <th scope="row">{{ obj.naam }}</th>
+              <td>{{ obj.omschrijving }}</td>
+              <td>{{ obj.poolnaam }}</td>
+              <td>{{ obj.type }}</td>
+              <td>
+                <button
+                  (click)="LoadUpdate(obj)"
+                  type="button"
+                  class="btn btn-warning"
+                >
+                  <i class="material-icons small">edit</i>
+                </button>
+              </td>
+              <td>
+                <button
+                  (click)="Delete(obj)"
+                  type="button"
+                  class="btn btn-danger"
+                >
+                  <i class="material-icons small">clear</i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-sm">
+      <button (click)="New()" type="button" class="btn btn-success">
+        Nieuwe App
+      </button>
+      <div class="container-fluid">
+        <form [formGroup]="form" (ngSubmit)="Formsubmit()">
+          <fieldset>
+            <legend>Module</legend>
+            <div class="form-group row"></div>
+            <!--ID-->
+            <div class="form-group">
+              <input
+                type="number"
+                formControlName="id"
+                class="form-control"
+                hidden="true"
+              />
+            </div>
+            <!--Naam veld-->
+            <div class="form-group">
+              <label for="lblNaam">App Naam: </label>
+              <input
+                [ngClass]="{
+                  'is-invalid': form.get('naam').errors
+                }"
+                type="text"
+                formControlName="naam"
+                class="form-control"
+                placeholder="App Naam"
+              />
+              <div class="invalid-feedback">Naam verplicht</div>
+            </div>
+            <!--Beschrijkving veld-->
+            <div class="form-group">
+              <label for="lblBeschrijving">Omschrijving: </label>
+              <textarea
+                [ngClass]="{
+                  'is-invalid': form.get('omschrijving').errors
+                }"
+                class="form-control"
+                formControlName="omschrijving"
+              ></textarea>
+              <div class="invalid-feedback">Omschrijving verplicht</div>
+            </div>
+            <!--Beschrijkving veld-->
+            <div class="form-group">
+              <label for="lblangularComponent">Poolnaam: </label>
+              <input
+                type="text"
+                formControlName="poolnaam"
+                class="form-control"
+                placeholder="Poolnaam"
+              />
+            </div>
+            <!--Beschrijkving veld-->
+            <div class="form-group">
+              <label for="lbldedicatedPc">Machine: </label>
+              <input
+                type="text"
+                formControlName="machine"
+                class="form-control"
+                placeholder="Machine"
+              />
+            </div>
+            <!--Beschrijkving veld-->
+            <div class="form-group">
+              <label for="lbldedicatedPc">Type: </label>
+              <input
+                type="text"
+                formControlName="type"
+                class="form-control"
+                placeholder="Type"
+              />
+            </div>
+            <!--Submit Knop-->
+            <button type="submit" class="btn btn-primary btn-block">
+              Save
+            </button>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

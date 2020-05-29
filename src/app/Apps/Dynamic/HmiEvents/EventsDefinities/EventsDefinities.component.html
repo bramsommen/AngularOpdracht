@@ -1,0 +1,252 @@
+<div class="container-fluid mb-2 mt-2">
+  <div class="row">
+    <div class="col-12">
+      <button
+        class="btn btn-outline-secondary btn-block dropdown-toggle text-left"
+        type="button"
+        id="dropdownMenuButton"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <span *ngIf="zoekString === null">Selecteer een event type</span>
+        <span *ngIf="zoekString != null">{{ zoekString }}</span>
+      </button>
+
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <div class="container-fluid">
+          <div class="row p-1" *ngFor="let obj of lstTypes">
+            <div class="col-12 my-auto">
+              <button
+                type="button btn-block"
+                class="btn btn-secondary btn-block text-left"
+                (click)="Select(obj)"
+              >
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col-2 text-left">
+                      {{ obj }}
+                    </div>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <button (click)="New()" type="button" class="btn btn-success">
+        Nieuw
+      </button>
+
+      <div class="container-fluid" *ngIf="formVisible">
+        <form [formGroup]="form" (ngSubmit)="Formsubmit()">
+          <fieldset>
+            <legend>Event Definitie</legend>
+            <div class="form-group row"></div>
+            <!--ID-->
+            <div class="form-group">
+              <input
+                type="number"
+                formControlName="eventId"
+                class="form-control"
+                hidden="true"
+              />
+            </div>
+
+            <!--OPC Tag veld-->
+            <div class="form-group">
+              <label for="lblopcTag">Opc Tag: </label>
+              <input
+                type="text"
+                formControlName="opcTag"
+                class="form-control"
+                placeholder="opcTag"
+              />
+            </div>
+
+            <!-- plcAdress -->
+            <div class="form-group">
+              <label for="lblplcAdress">PLC Adres: </label>
+              <input
+                type="text"
+                formControlName="plcAdress"
+                class="form-control"
+                placeholder="plcAdress"
+              />
+            </div>
+
+            <!-- appName -->
+            <div class="form-group">
+              <label for="lblappName">App Name: </label>
+              <input
+                type="text"
+                formControlName="appName"
+                class="form-control"
+                placeholder="appName"
+                hidden="true"
+              />
+            </div>
+
+            <!--Type veld-->
+            <div class="form-group">
+              <label for="lbltype">Type: </label>
+
+              <select
+                [ngClass]="{
+                  'is-invalid': form.get('type').errors
+                }"
+                type="text"
+                formControlName="type"
+                class="form-control"
+                placeholder="Type"
+              >
+                <option>
+                  Alarm
+                </option>
+                <option>
+                  Waarschuwing
+                </option>
+                <option>
+                  Melding
+                </option>
+              </select>
+              <div class="invalid-feedback">Type verplicht</div>
+            </div>
+
+            <!--Omschrijving veld-->
+            <div class="form-group">
+              <label for="lblBeschrijving">Omschrijving: </label>
+              <textarea
+                [ngClass]="{
+                  'is-invalid': form.get('omschrijving').errors
+                }"
+                class="form-control"
+                formControlName="omschrijving"
+              ></textarea>
+              <div class="invalid-feedback">Omschrijving verplicht</div>
+            </div>
+
+            <!-- Info -->
+            <div class="form-group">
+              <label for="lblInfo">info: </label>
+              <textarea
+                [ngClass]="{
+                  'is-invalid': form.get('info').errors
+                }"
+                class="form-control"
+                formControlName="info"
+              ></textarea>
+              <div class="invalid-feedback">Info verplicht</div>
+            </div>
+
+            <!-- Info -->
+            <div class="form-group">
+              <label for="lbllogging">Logging actief: </label>
+              <div class="d-block custom-control custom-switch">
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="customSwitch1"
+                  formControlName="logging"
+                  checked=""
+                />
+                <label class="custom-control-label" for="customSwitch1"></label>
+              </div>
+            </div>
+
+            <!--Submit Knop-->
+            <button type="submit" class="btn btn-primary btn-block">
+              Save
+            </button>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+    <hr />
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="container-fluid">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th class="p-1" style="width: 5%;" scope="col">Type</th>
+              <th class="p-1" style="width: 5%;" scope="col">Id</th>
+              <th class="p-1" style="width: 25%;" scope="col">OPC Tag</th>
+              <th class="p-1" style="width: 25%;" scope="col">PLC Adres</th>
+              <th class="p-1" style="width: auto;" scope="col">Omschrijving</th>
+              <th class="p-1" style="width: 5%;">Archief</th>
+              <th class="p-1" style="width: 5%;"></th>
+              <th class="p-1" style="width: 5%;"></th>
+            </tr>
+          </thead>
+
+          <tbody *ngFor="let obj of lstObjects | myfilter: zoekString">
+            <tr>
+              <!--Type Sign-->
+              <td class="p-1 align-middle">
+                <div>
+                  <ng-template [ngIf]="obj.type === 'Alarm'">
+                    <i class="material-icons smallThump text-danger">cancel</i>
+                  </ng-template>
+
+                  <ng-template [ngIf]="obj.type === 'Waarschuwing'">
+                    <i class="material-icons smallThump text-warning">error</i>
+                  </ng-template>
+
+                  <ng-template [ngIf]="obj.type === 'Melding'">
+                    <i class="material-icons smallThump text-info">info</i>
+                  </ng-template>
+                </div>
+              </td>
+
+              <td class="p-1 align-middle">{{ obj.eventId }}</td>
+              <td class="p-1 align-middle">{{ obj.opcTag }}</td>
+              <td class="p-1 align-middle">{{ obj.plcAdress }}</td>
+              <td class="p-1 align-middle">{{ obj.omschrijving }}</td>
+              <td class="p-1 align-middle">
+                <ng-template [ngIf]="obj.logging === true">
+                  <i class="material-icons smallThump text-success"
+                    >playlist_add</i
+                  >
+                </ng-template>
+
+                <ng-template [ngIf]="obj.logging === false">
+                  <i class="material-icons smallThump text-danger"
+                    >not_interested</i
+                  >
+                </ng-template>
+              </td>
+
+              <td class="p-1 align-middle">
+                <button
+                  (click)="LoadUpdate(obj)"
+                  type="button"
+                  class="btn btn-warning"
+                >
+                  <i class="material-icons small">edit</i>
+                </button>
+              </td>
+              <td class="p-1 align-middle">
+                <button
+                  (click)="Delete(obj)"
+                  type="button"
+                  class="btn btn-danger"
+                >
+                  <i class="material-icons small">clear</i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

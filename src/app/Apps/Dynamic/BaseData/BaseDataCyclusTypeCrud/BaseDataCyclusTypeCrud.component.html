@@ -1,0 +1,94 @@
+<app-MachineOnderdeelSelector
+  (selectMachineOnderdeel)="selectMachineOnderdeel($event)"
+>
+  ></app-MachineOnderdeelSelector
+>
+
+<div class="container-fluid" *ngIf="selectedMachineOnderdeel != null">
+  <div class="row">
+    <div class="col-md-12">
+      <button (click)="New()" type="button" class="btn btn-success">
+        Nieuw
+      </button>
+
+      <div class="container-fluid" *ngIf="formVisible">
+        <form [formGroup]="form" (ngSubmit)="Formsubmit()">
+          <fieldset>
+            <legend>Cyclus Type</legend>
+            <div class="form-group row"></div>
+            <!--ID-->
+            <div class="form-group">
+              <input
+                type="number"
+                formControlName="id"
+                class="form-control"
+                hidden="true"
+              />
+            </div>
+
+            <!--Naam veld-->
+            <div class="form-group">
+              <label for="lblNaam">Naam: </label>
+              <input
+                [ngClass]="{
+                  'is-invalid': form.get('naam').errors
+                }"
+                type="text"
+                formControlName="naam"
+                class="form-control"
+                placeholder="Naam"
+              />
+              <div class="invalid-feedback">Naam verplicht</div>
+            </div>
+
+            <!--Submit Knop-->
+            <button type="submit" class="btn btn-primary btn-block">
+              Save
+            </button>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+    <hr />
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="container-fluid">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th class="p-1" style="width: 100%" scope="col">Naam</th>
+              <th class="p-1" style="width: 5%"></th>
+              <th class="p-1" style="width: 5%"></th>
+            </tr>
+          </thead>
+
+          <tbody *ngFor="let obj of lstCyclusTypes">
+            <tr>
+              <td class="p-1 align-middle">{{ obj.naam }}</td>
+
+              <td class="p-1 align-middle">
+                <button
+                  (click)="LoadUpdate(obj)"
+                  type="button"
+                  class="btn btn-warning"
+                >
+                  <i class="material-icons small">edit</i>
+                </button>
+              </td>
+              <td class="p-1 align-middle">
+                <button
+                  (click)="Delete(obj)"
+                  type="button"
+                  class="btn btn-danger"
+                >
+                  <i class="material-icons small">clear</i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

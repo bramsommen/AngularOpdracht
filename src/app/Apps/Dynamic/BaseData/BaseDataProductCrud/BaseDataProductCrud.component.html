@@ -1,0 +1,713 @@
+<app-MachineOnderdeelSelector
+  (selectMachineOnderdeel)="selectMachineOnderdeel($event)"
+>
+  ></app-MachineOnderdeelSelector
+>
+
+<!--MAIN FRAME - FULL PAGE-->
+<div *ngIf="selectedMachineOnderdeel != null">
+  <div class="container-fluid">
+    <!--Dropdown selectie product-->
+    <div class="row">
+      <!--Knop nieuw Profuct form opnenen-->
+
+      <div class="col-auto my-auto">
+        <button (click)="NieuwProduct()" type="button" class="btn btn-success">
+          <i class="material-icons small">add</i>
+        </button>
+      </div>
+
+      <div class="col my-auto">
+        <button
+          class="btn btn-outline-success btn-block text-left"
+          type="button"
+          id="dropdownMenuButton"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <div
+            class="container-fluid"
+            *ngIf="selectedProduct != null; else elseBlock"
+          >
+            <div class="row" *ngIf="selectedProduct != null">
+              <!--Artikel Code-->
+              <div class="col-3 my-auto">
+                {{ selectedProduct.artikelCode }}
+              </div>
+
+              <!--Omschrijving-->
+              <div
+                class="col-9 my-auto"
+                *ngIf="selectedProduct.globalProduct.omschrijving !== null"
+              >
+                {{ selectedProduct.globalProduct.omschrijving }}
+              </div>
+            </div>
+          </div>
+          <ng-template #elseBlock>Selecteer Product</ng-template>
+        </button>
+
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <div class="container-fluid">
+            <div class="row p-1">
+              <div class="col-12 my-auto">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col" style="width: 25%;">Artikel Code</th>
+                      <th scope="col" style="width: auto;">Omschrijving</th>
+                      <th scope="col" class="text-center" style="width: auto;">
+                        Versie Status
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      onmouseover=""
+                      style="cursor: pointer;"
+                      *ngFor="let obj of lstProducten"
+                    >
+                      <th scope="row" (click)="DropDownSelectProduct(obj)">
+                        {{ obj.artikelCode }}
+                      </th>
+                      <td
+                        (click)="DropDownSelectProduct(obj)"
+                        *ngIf="obj.globalProduct.omschrijving !== null"
+                      >
+                        {{ obj.globalProduct.omschrijving }}
+                      </td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-auto my-auto">
+        <button
+          (click)="DeleteProduct(selectedProduct)"
+          type="button"
+          class="btn btn-danger"
+        >
+          <i class="material-icons small">delete</i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <hr />
+
+  <!-- Product edit venster-->
+  <div class="container-fluid">
+    <div class="row" *ngIf="this.productFormVisible">
+      <!--Zoek functie voor nieuwe product codes-->
+      <div class="col-12">
+        <!--Zoek balk-->
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Zoek artikelCode..."
+          [(ngModel)]="zoekString"
+        />
+
+        <!--Lijst met S-Codes-->
+        <div class="objectListScrollBox">
+          <!--List Element-->
+          <div
+            class="d-block pt-3 pb-0"
+            style="cursor: pointer;"
+            (click)="ProductFormSubmit(obj)"
+            *ngFor="let obj of artikelen | filter: zoekString"
+          >
+            <h5 class="d-block">{{ obj.artikelCode }}</h5>
+            <p class="d-block">{{ obj.omschrijving }}</p>
+            <hr />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="container-fluid p-2"
+      *ngIf="selectedProduct != null && !this.productFormVisible"
+    >
+      <div class="row">
+        <!--Versie Beheer-->
+        <div class="col-md-2 border bg-light">
+          <!--Titel - Versie beheer-->
+          <div class="card-header text-white bg-primary text-center">
+            Versie Beheer
+          </div>
+
+          <!--DropDown Versie Selectie-->
+          <!--DropDown Versie Selectie-->
+          <!--DropDown Versie Selectie-->
+          <button
+            class="btn  btn-block text-left
+
+            {{ selectedProductVersie === null && 'btn-outline-primary' }}
+
+            {{
+              selectedProductVersie != null &&
+                selectedProductVersie.status === 0 &&
+                'btn-outline-danger'
+            }}
+            {{
+              selectedProductVersie != null &&
+                selectedProductVersie.status === 1 &&
+                'btn-outline-info'
+            }}
+            {{
+              selectedProductVersie != null &&
+                selectedProductVersie.status === 2 &&
+                'btn-outline-success'
+            }}
+
+
+
+            "
+            type="button"
+            id="dropdownMenuButton"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <div
+              class="container-fluid"
+              *ngIf="selectedProductVersie != null; else elseBlock"
+            >
+              <div class="row">
+                <!--Artikel Code-->
+                <div class="col-2 my-auto">
+                  {{ selectedProductVersie.versie }}
+                </div>
+
+                <!--Omschrijving-->
+                <div class="col-8 my-auto">
+                  {{ selectedProductVersie.naam }}
+                </div>
+
+                <div class="col-2 my-auto">
+                  <ng-template [ngIf]="selectedProductVersie.status === 0">
+                    <i class="material-icons text-danger">clear</i>
+                  </ng-template>
+
+                  <ng-template [ngIf]="selectedProductVersie.status === 1">
+                    <i class="material-icons text-info">error</i>
+                  </ng-template>
+
+                  <ng-template [ngIf]="selectedProductVersie.status === 2">
+                    <i class="material-icons text-success">thumb_up</i>
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+            <ng-template #elseBlock>Selecteer Versie</ng-template>
+          </button>
+
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <div class="container-fluid">
+              <div class="row p-1">
+                <div class="col-12 my-auto">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr></tr>
+                    </thead>
+                    <tbody>
+                      <!--Weergeven van alle beschikbare versies-->
+                      <tr
+                        onmouseover=""
+                        style="cursor: pointer;"
+                        *ngFor="let obj of selectedProduct.productVersie"
+                      >
+                        <td scope="row" (click)="SelectVersie(obj)">
+                          {{ obj.versie }} - {{ obj.naam }}
+                        </td>
+
+                        <td class="text-center">
+                          <ng-template [ngIf]="obj.status === 0">
+                            <i class="material-icons text-danger">clear</i>
+                          </ng-template>
+
+                          <ng-template [ngIf]="obj.status === 1">
+                            <i class="material-icons text-info">error</i>
+                          </ng-template>
+
+                          <ng-template [ngIf]="obj.status === 2">
+                            <i class="material-icons text-success">thumb_up</i>
+                          </ng-template>
+                        </td>
+                      </tr>
+
+                      <!--Nieuw Versie-->
+                      <tr
+                        class="table-success"
+                        onmouseover=""
+                        style="cursor: pointer;"
+                      >
+                        <th
+                          class="text-center"
+                          scope="row"
+                          (click)="CreateBlancoVersie(selectedProduct)"
+                        >
+                          <i class="material-icons small">add</i>
+                        </th>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3" *ngIf="selectedProductVersie != null">
+            <form
+              [formGroup]="productVersieForm"
+              (ngSubmit)="SubmitProductVersieForm()"
+            >
+              <fieldset>
+                <div class="form-group row"></div>
+                <!--ID-->
+                <div class="form-group">
+                  <input
+                    type="number"
+                    hidden="true"
+                    formControlName="id"
+                    class="form-control"
+                  />
+                </div>
+
+                <!--FK Product ID-->
+                <div class="form-group">
+                  <input
+                    type="number"
+                    formControlName="productId"
+                    class="form-control"
+                    hidden="true"
+                  />
+                </div>
+
+                <!--Foto veld-->
+                <div hidden="true" class="form-group">
+                  <label for="lblNaam">Foto: </label>
+                  <input
+                    type="text"
+                    formControlName="foto"
+                    class="form-control"
+                    placeholder="Foto"
+                    hidden="true"
+                  />
+                </div>
+
+                <!--cad3d veld-->
+                <div hidden="true" class="form-group">
+                  <label for="lblBeschrijving">cad3d: </label>
+                  <input
+                    type="text"
+                    formControlName="cad3d"
+                    class="form-control"
+                    placeholder="cad3d"
+                    hidden="true"
+                  />
+                </div>
+
+                <!--cad2d veld-->
+                <div hidden="true" class="form-group">
+                  <label for="lblangularComponent">cad2d: </label>
+                  <input
+                    type="text"
+                    formControlName="cad2d"
+                    class="form-control"
+                    placeholder="cad2d"
+                    hidden="true"
+                  />
+                </div>
+
+                <!--pdf veld-->
+                <div hidden="true" class="form-group">
+                  <label for="lbldedicatedPc">pdf: </label>
+                  <input
+                    type="text"
+                    formControlName="pdf"
+                    class="form-control"
+                    placeholder="pdf"
+                    hidden="true"
+                  />
+                </div>
+
+                <!--naam veld-->
+                <div class="form-group">
+                  <label for="lbldedicatedPc">Naam: </label>
+                  <input
+                    type="text"
+                    formControlName="naam"
+                    class="form-control"
+                    placeholder="naam"
+                  />
+                </div>
+
+                <!--versie veld-->
+                <div class="form-group">
+                  <label hidden="true" for="lbldedicatedPc">Versie: </label>
+                  <input
+                    type="number"
+                    formControlName="versie"
+                    class="form-control"
+                    placeholder="versie"
+                    hidden="true"
+                  />
+                </div>
+
+                <!--status veld-->
+                <div class="form-group">
+                  <label for="lbldedicatedPc">status: </label>
+                  <select
+                    formControlName="status"
+                    type="number"
+                    class="form-control"
+                  >
+                    <option [ngValue]="0">Niet OK</option>
+                    <option [ngValue]="1">Test</option>
+                    <option [ngValue]="2">Productie</option>
+                  </select>
+                </div>
+
+                <!--Submit Knop-->
+                <button type="submit" class="btn btn-warning btn-block">
+                  <i class="material-icons small">save</i>
+                </button>
+              </fieldset>
+            </form>
+            <!--Dupliceer-->
+
+            <button
+              (click)="CopyVersie(selectedProductVersie)"
+              type="button"
+              class="btn btn-success btn-block"
+            >
+              <i class="material-icons small">library_add</i>
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-danger btn-block"
+              (click)="DeleteProductVersie(selectedProductVersie)"
+            >
+              <i class="material-icons small">delete</i>
+            </button>
+          </div>
+        </div>
+
+        <!--MAIN FRAME-->
+        <div class="col-md-10" *ngIf="selectedProductVersie != null">
+          <!--TAB NAVIGATIE -->
+          <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                onmouseover=""
+                style="cursor: pointer;"
+                data-toggle="tab"
+                (click)="SetEigenschapVisible()"
+                >Eigenschappen</a
+              >
+            </li>
+
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle  {{
+                  selectedProductVersie.productVersieCyclus.length ===
+                    lstCyclusTypes.length && 'bg-success text-white'
+                }}"
+                data-toggle="dropdown"
+                role="button"
+                onmouseover=""
+                style="cursor: pointer;"
+                aria-haspopup="true"
+                aria-expanded="false"
+                >Maak Cyclussen</a
+              >
+              <div class="dropdown-menu">
+                <a
+                  *ngFor="let obj of lstCyclusTypes"
+                  class="dropdown-item"
+                  (click)="SelectCyclusType(obj)"
+                  data-toggle="tab"
+                  onmouseover=""
+                  style="cursor: pointer;"
+                  >{{ obj.naam }}
+                </a>
+              </div>
+            </li>
+          </ul>
+
+          <div id="myTabContent" class="tab-content">
+            <!---->
+            <!---->
+            <!--TAB EIGENSCHAPPEN-->
+            <div
+              class="tab-pane {{
+                maakCyclussenVisible === false && 'active show'
+              }}  fade"
+            >
+              <table class="table table-hover table-striped">
+                <thead>
+                  <tr>
+                    <th class="p-1" scope="col" style="width: 20%;">Naam</th>
+                    <th class="p-1" scope="col" style="width: 40%;">
+                      Omschrijving
+                    </th>
+                    <th class="p-1" scope="col" style="width: 10%;">
+                      Data Type
+                    </th>
+                    <th
+                      class="p-1"
+                      scope="col"
+                      style="width: 10%; text-align: center;"
+                    >
+                      Waarde
+                    </th>
+                    <th
+                      class="p-1"
+                      scope="col"
+                      style="width: 20%; text-align: center;"
+                    >
+                      Bron/Edit
+                    </th>
+                    <th class="p-1" scope="col" style="width: 10%;">Check</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="let obj of selectedProductVersie.productEigenschap"
+                  >
+                    <td class="p-1 align-middle">{{ obj.eigenschap.naam }}</td>
+                    <td class="p-1 align-middle">
+                      {{ obj.eigenschap.omschrijving }}
+                    </td>
+                    <td class="p-1 align-middle">
+                      {{ obj.eigenschap.dataType }}
+                    </td>
+                    <td class="p-1 align-middle">
+                      {{ obj.waarde }}
+                    </td>
+                    <td class="p-1 align-middle">
+                      <ng-template
+                        [ngIf]="obj.eigenschap.globalEigenschap === ''"
+                      >
+                        <form
+                          [formGroup]="productEigenschapForm"
+                          (keyup.enter)="UpdateProductEigenschapWaarde(obj)"
+                        >
+                          <fieldset>
+                            <div class="form-group"></div>
+
+                            <!--Naam veld-->
+                            <div Waarde="form-group">
+                              <input
+                                formControlName="waarde"
+                                class="form-control"
+                                placeholder=""
+                                value="{{ obj.waarde }}"
+                              />
+                            </div>
+                          </fieldset>
+                        </form>
+                      </ng-template>
+                      <ng-template
+                        [ngIf]="obj.eigenschap.globalEigenschap !== ''"
+                      >
+                        <div class="d-block text-center">
+                          {{ obj.eigenschap.globalEigenschap }}
+                        </div>
+                      </ng-template>
+                    </td>
+
+                    <td class="p-1 align-middle">
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input
+                            type="checkbox"
+                            class="custom-control-input"
+                            [id]="obj.id"
+                            [checked]="obj.check"
+                            (click)="UpdateProductEigenschapCheck(obj)"
+                          />
+                          <label
+                            class="custom-control-label"
+                            style="cursor: pointer;"
+                            [for]="obj.id"
+                          ></label>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!---->
+            <!---->
+            <!--TAB MAAK INSTELLINGEN-->
+            <div
+              class="tab-pane fade
+        {{ maakCyclussenVisible === true && 'active show' }}"
+            >
+              <!--Product Versie Cyclus-->
+              <div class="container-fluid">
+                <!---->
+                <!---->
+                <!-- Cyclus Selecteren-->
+                <div class="row" *ngIf="selectedProductVersieCycle === null">
+                  <!--Aanmaken nieuw Product Versie Cyclus-->
+                  <div class="col-12">
+                    <button
+                      class="btn btn-outline-success btn-block dropdown-toggle text-left"
+                      type="button"
+                      id="dropdownMenuButton"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      Selecteer Cyclus
+                    </button>
+
+                    <div
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenuButton"
+                    >
+                      <div class="container-fluid">
+                        <div
+                          class="row p-1"
+                          *ngFor="let obj of lstCylusFromType"
+                        >
+                          <div class="col-12 my-auto">
+                            <button
+                              type="button"
+                              class="btn btn-secondary btn-block text-left"
+                              (click)="AddCyclusToProductVersie(obj)"
+                            >
+                              {{ obj.naam }}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!---->
+                <!---->
+                <!--Verwijderen van selected product versie cylus-->
+
+                <!-- Verwijderen van Productie Versie Cylus-->
+                <div class="row" *ngIf="selectedProductVersieCycle != null">
+                  <!--HEADER-->
+                  <div class="col-10 my-auto text-left">
+                    <h3 class="my-auto">
+                      Cyclus:
+                      <strong
+                        >"{{ selectedProductVersieCycle.cyclus.naam }}"</strong
+                      >
+                    </h3>
+                  </div>
+
+                  <!--DEL KNOP-->
+                  <div class="col-2 my-auto text-right">
+                    <button
+                      (click)="DeleteProductieMaakCylus()"
+                      type="button"
+                      class="btn btn-danger"
+                    >
+                      <i class="material-icons small">clear</i>
+                    </button>
+                  </div>
+                </div>
+
+                <!---->
+                <!---->
+                <!--TABEL MAAK INSTELLINGEN-->
+                <!-- Tabel Volgorde Versie Maak Instellingen -->
+                <div class="row" *ngIf="selectedProductVersieCycle != null">
+                  <div class="col-12">
+                    <!--MAAK INSTELLING TABEL-->
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th class="p-1" style="width: 5%;">Stap</th>
+                          <th class="p-1" style="width: 35%;" scope="col">
+                            Naam
+                          </th>
+                          <th class="p-1" style="width: 20%;" scope="col">
+                            Data Type
+                          </th>
+                          <th class="p-1" style="width: 20%;" scope="col">
+                            Waarde
+                          </th>
+                          <th class="p-1" style="width: 20%;" scope="col">
+                            Product Eigenschap
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <!--RIJEN DATA-->
+
+                        <tr
+                          *ngFor="
+                            let obj of selectedProductVersieCycle.cyclus
+                              .cyclusMaakInstelling
+                          "
+                        >
+                          <!--Kolom Data-->
+                          <!--KOL 1-->
+                          <td
+                            class="p-1 text-center align-middle {{
+                              obj.stap % 2 == 0 && 'bg-dark text-white'
+                            }} "
+                          >
+                            {{ obj.stap }}
+                          </td>
+                          <!--KOL 2-->
+                          <td
+                            class="p-1 align-middle"
+                            *ngIf="obj.maakInstelling"
+                          >
+                            {{ obj.maakInstelling.naam }}
+                          </td>
+
+                          <!--KOL 3-->
+                          <td
+                            class="p-1 align-middle"
+                            *ngIf="obj.maakInstelling"
+                          >
+                            {{ obj.maakInstelling.dataType }}
+                          </td>
+
+                          <!--KOL 4-->
+                          <td class="p-1 align-middle">{{ obj.waarde }}</td>
+
+                          <!--KOL 5-->
+                          <td class="p-1 align-middle">
+                            <span *ngIf="obj.productEigenschap != null">{{
+                              obj.productEigenschap.naam
+                            }}</span>
+                          </td>
+                        </tr>
+                      </tbody>
+
+                      <!--MAAK INSTELLING TABEL-->
+                    </table>
+                  </div>
+                </div>
+                <!---->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

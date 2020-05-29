@@ -1,0 +1,107 @@
+<!--STATUS BAR-->
+<div class="statusBar bg-info" (mouseover)="showNavigatie()">
+  <a href="#">
+    <h3 class="d-inline txtMiddle">DiGi</h3>
+  </a>
+
+  <!--Gebruikersnaam-->
+  <ng-template [ngIf]="gebruiker !== null">
+    <span class="d-none d-md-inline">
+      <h3 class="d-inline material-icons iconHeader txtMiddle">
+        person
+      </h3>
+      <h6 class="d-inline txtMiddle headerLink">
+        {{ gebruiker.naam.toUpperCase() }}
+      </h6>
+    </span>
+  </ng-template>
+
+  <!--HOME BUTTON-->
+  <ng-template [ngIf]="gebruiker !== null && app !== null">
+    <span class="d-inline headerLink" (click)="GoToApps()">
+      <h3 class="d-inline material-icons iconHeader txtMiddle">
+        home
+      </h3>
+      <h6 class="d-inline txtMiddle headerLink">
+        HOME
+      </h6>
+    </span>
+  </ng-template>
+
+  <!--Actieve Applicatie-->
+  <ng-template [ngIf]="this.app !== null">
+    <span class="d-inline headerLink" (click)="GotToAppRoot()">
+      <h3 class="d-inline material-icons iconHeader txtMiddle">
+        apps
+      </h3>
+      <h6 class="d-inline txtMiddle">
+        {{ app.naam.toUpperCase() }}
+      </h6>
+    </span>
+  </ng-template>
+
+  <ng-template [ngIf]="this.activeMenuLevel !== null">
+    <span
+      class="d-none d-md-inline headerLink"
+      *ngFor="let crum of activeMenuLevel"
+      (click)="OpenModule(crum.parentModule)"
+    >
+      <h3 class="d-inline material-icons iconHeader txtMiddle">
+        keyboard_arrow_right
+      </h3>
+      <h6 class="d-inline txtMiddle headerLink">
+        {{ crum.parentModule.naam.toUpperCase() }}
+      </h6>
+    </span>
+  </ng-template>
+
+  <!--Actieve module-->
+  <ng-template [ngIf]="this.openModele !== null">
+    <span class="d-none d-md-inline">
+      <h3 class="d-inline material-icons iconHeader txtMiddle">
+        keyboard_arrow_right
+      </h3>
+      <h6 class="d-inline txtMiddle headerLink">
+        <u> {{ openModele.naam.toUpperCase() }}</u>
+      </h6>
+    </span>
+  </ng-template>
+</div>
+
+<!-- Mouse over BAR-->
+<ng-template [ngIf]="!this.menuVisible && this.app !== null">
+  <div
+    class="bg-primary text-center text-white"
+    style="height: 20px;"
+    (mouseover)="showNavigatie()"
+    (click)="showNavigatie()"
+  >
+    MENU
+  </div>
+</ng-template>
+
+<!--Navigatie-->
+<ng-template [ngIf]="this.menuVisible">
+  <nav
+    class="navbar navbar-expand-md navbar-dark bg-primary p-0"
+    (mouseover)="showNavigatie()"
+    (mouseleave)="hideNavigatie()"
+  >
+    <!-- Lijst van Menu items-->
+    <span
+      class="d-inline txtMiddle p-2 headerLink"
+      *ngFor="let module of activeModules"
+      (click)="OpenModule(module)"
+    >
+      <h3
+        class="d-block material-icons iconMenu txtMiddle text-center text-info"
+      >
+        graphic_eq
+      </h3>
+
+      <span class="d-block text-center text-white menuTextContainer">
+        <p class="menuText">{{ module.naam }}</p>
+      </span>
+    </span>
+  </nav>
+</ng-template>

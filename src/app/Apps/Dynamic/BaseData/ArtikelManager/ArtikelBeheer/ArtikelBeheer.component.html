@@ -1,0 +1,286 @@
+<div>
+  <div class="container-fluid p-0">
+    <div class="row">
+      <div class="col-3">
+        <div class="d-block" *ngIf="this.artikelen !== null">
+          <div class="col-12">
+            <!--Zoek balk-->
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Zoek artikelCode..."
+              [(ngModel)]="zoekString"
+            />
+
+            <!--Knop voor toevoegen van nieuwe S-CODE-->
+            <button
+              type="button"
+              class="btn-block btn btn-success"
+              (click)="AddNewArtikel()"
+            >
+              <i class="material-icons small">add</i>
+            </button>
+
+            <!--Lijst met S-Codes-->
+            <div class="objectListScrollBox">
+              <!--List Element-->
+              <div
+                class="d-block pt-3 pb-0
+                {{
+                  selectedArtikel !== null &&
+                    selectedArtikel.artikelCode.toUpperCase() ===
+                      obj.artikelCode.toUpperCase() &&
+                    'bg-success'
+                }}
+
+                "
+                style="cursor: pointer;"
+                (click)="SelectArtikel(obj)"
+                *ngFor="let obj of artikelen | filter: zoekString"
+              >
+                <h5 class="d-block">{{ obj.artikelCode }}</h5>
+                <p class="d-block">{{ obj.omschrijving }}</p>
+                <hr />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-9">
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#algemeen"
+              >Algemeen</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#eigenschappen"
+              >Eigenschappen
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#info">Info</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#copy">Copy</a>
+          </li>
+        </ul>
+        <div id="myTabContent" class="tab-content">
+          <!-- TAB ALGEMEEN -->
+          <!-- TAB ALGEMEEN -->
+          <!-- TAB ALGEMEEN -->
+          <div class="tab-pane fade show active" id="algemeen">
+            <p></p>
+            <form [formGroup]="algemeenForm" (ngSubmit)="UpdateArtikel()">
+              <fieldset>
+                <legend>Algemeen</legend>
+                <div class="form-group row"></div>
+
+                <!--ArtikelCode veld-->
+                <div class="form-group">
+                  <label for="lblNaam">ArtikelCode: </label>
+                  <input
+                    [ngClass]="{
+                      'is-invalid': algemeenForm.get('artikelCode').errors
+                    }"
+                    type="text"
+                    formControlName="artikelCode"
+                    class="form-control"
+                    placeholder="App Naam"
+                    disabled="true"
+                  />
+                  <div class="invalid-feedback">Artikelcode verplicht</div>
+                </div>
+
+                <!--Naam veld-->
+                <div class="form-group">
+                  <label for="lblBeschrijving">Naam: </label>
+                  <textarea
+                    [ngClass]="{
+                      'is-invalid': algemeenForm.get('naam').errors
+                    }"
+                    class="form-control"
+                    formControlName="naam"
+                  ></textarea>
+                  <div class="invalid-feedback">Naam verplicht</div>
+                </div>
+
+                <!--Omschrijving veld-->
+                <div class="form-group">
+                  <label for="lblBeschrijving">Omschrijving: </label>
+                  <textarea
+                    [ngClass]="{
+                      'is-invalid': algemeenForm.get('omschrijving').errors
+                    }"
+                    class="form-control"
+                    formControlName="omschrijving"
+                  ></textarea>
+                  <div class="invalid-feedback">Omschrijving verplicht</div>
+                </div>
+
+                <!--Submit Knop-->
+                <button type="submit" class="btn btn-primary btn-block">
+                  Update
+                </button>
+
+                <button
+                  type="submit"
+                  class="btn btn-danger btn-block"
+                  (click)="DeleteArtikel()"
+                >
+                  <i class="material-icons small">clear</i>
+                </button>
+              </fieldset>
+            </form>
+          </div>
+
+          <!-- TAB EIGENSCHAPPEN -->
+          <!-- TAB EIGENSCHAPPEN -->
+          <!-- TAB EIGENSCHAPPEN -->
+          <div class="tab-pane fade" id="eigenschappen">
+            <!--new row-->
+
+            <!--Selection Header-->
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-2">
+                  <button
+                    type="submit"
+                    class="btn btn-block btn-primary btn-success"
+                    style="cursor: pointer;"
+                    (click)="CreateBlancoEigenschap()"
+                  >
+                    <i class="material-icons small">add</i>
+                  </button>
+                </div>
+
+                <div class="col-8 my-auto">
+                  <!--Drop Down Met Eigenschappen-->
+                  <div class="d-block">
+                    <button
+                      class="btn btn-outline-secondary btn-block dropdown-toggle text-left"
+                      type="button"
+                      id="dropdownMenuButton"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      <span>
+                        Voeg Eigenschappen van machine onderdeel toe aan
+                        artikel</span
+                      >
+                    </button>
+
+                    <div
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenuButton"
+                    >
+                      <div class="container-fluid">
+                        <div
+                          class="row p-1"
+                          *ngFor="let obj of baseDataMachineOnderdelen"
+                        >
+                          <div class="col-12 my-auto">
+                            <button
+                              type="button btn-block"
+                              class="btn btn-secondary btn-block text-left"
+                              (click)="SelectMachineonderdeel(obj)"
+                            >
+                              <div class="container-fluid">
+                                <div class="row">
+                                  <div class="col-2 text-left">
+                                    {{ obj.machine }}
+                                  </div>
+
+                                  <div class="col-auto text-left">
+                                    {{ obj.naam }}
+                                    <br />
+                                    {{ obj.omschrijving }}
+                                  </div>
+                                </div>
+                              </div>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <ng-template [ngIf]="this.selectedEigenschapRow !== null">
+                  <div class="col-2">
+                    <button
+                      type="submit"
+                      class="btn btn-block btn-primary btn-danger"
+                      style="cursor: pointer;"
+                      (click)="DeleteEigenschap()"
+                    >
+                      <i class="material-icons small">delete</i>
+                      {{ this.selectedEigenschapRow.naam }}
+                    </button>
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+
+            <!--Lijst met eigenschappen-->
+            <ag-grid-angular
+              style="width: 100%; height: 73vh;"
+              class="ag-theme-balham"
+              rowHeight="22"
+              rowSelection="multiple"
+              [rowData]="rowData | async"
+              [gridOptions]="gridOptions"
+              (cellValueChanged)="OnRowEdit($event)"
+              (cellClicked)="onCellClicked($event)"
+            >
+            </ag-grid-angular>
+          </div>
+
+          <!-- TAB INFO -->
+          <!-- TAB INFO -->
+          <!-- TAB INFO -->
+          <div class="tab-pane fade" id="info">
+            <p>
+              info
+            </p>
+          </div>
+
+          <!-- TAB COPY -->
+          <!-- TAB COPY -->
+          <!-- TAB COPY -->
+          <div class="tab-pane fade" id="copy">
+            <!--COPY FUNCTIE-->
+            <form [formGroup]="copyForm" (ngSubmit)="CopyFrom()">
+              <fieldset>
+                <legend>Nieuwe Artikel Code</legend>
+                <div class="form-group row"></div>
+
+                <!--ArtikelCode veld-->
+                <div class="form-group">
+                  <label for="lblNaam">ArtikelCode: </label>
+                  <input
+                    [ngClass]="{
+                      'is-invalid': copyForm.get('copyArtikelCode').errors
+                    }"
+                    type="text"
+                    formControlName="copyArtikelCode"
+                    class="form-control"
+                    placeholder="App Naam"
+                  />
+                  <div class="invalid-feedback">Artikelcode verplicht</div>
+                </div>
+
+                <!--Submit Knop-->
+                <button type="submit" class="btn btn-primary btn-block">
+                  Copy
+                </button>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

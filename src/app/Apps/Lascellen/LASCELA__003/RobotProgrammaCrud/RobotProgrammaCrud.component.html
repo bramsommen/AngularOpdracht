@@ -1,0 +1,701 @@
+<div class="">
+  <div class="row">
+    <!--Kolom met robot programma selectie-->
+    <div class="col-md-3 objectListScrollBox">
+      <!--Lijst met robot programa's-->
+      <div class="container-fluid">
+        <!--New form Btn-->
+        <div class="row mt-3">
+          <div class="col-12 text-center">
+            <button type="button" class="btn btn-success" (click)="NewForm()">
+              <i class="material-icons small">add</i>
+            </button>
+          </div>
+        </div>
+        <hr />
+
+        <div class="row" *ngIf="this.lstRobotProgrammas !== null">
+          <div class="col-12">
+            <!--Zoek balk-->
+
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Zoek..."
+              [(ngModel)]="zoekString"
+            />
+          </div>
+        </div>
+        <hr />
+
+        <!--List Element-->
+        <div
+          class="row mb-3"
+          *ngFor="let obj of lstRobotProgrammas | filter: zoekString"
+        >
+          <div class="col-12">
+            <div
+              class="card border-primary fatBorder m-0 p-0        {{
+                selectedRobotProgramma !== null &&
+                  obj.id === selectedRobotProgramma.id &&
+                  'border-info'
+              }}
+"
+              (click)="SelectRobotProgramma(obj)"
+            >
+              <div
+                class="card-header text-white
+          {{ obj.status === 0 && 'bg-danger' }}
+          {{ obj.status === 1 && 'bg-success' }}
+         "
+              >
+                {{ obj.naam }} - {{ obj.roseServerReferentie }}
+              </div>
+
+              <div class="container mb-md-2">
+                <div class="row">
+                  <!--Enkele opleg-->
+                  <!--Enkele opleg-->
+                  <!--Enkele opleg-->
+                  <div
+                    class="col-lg-12 my-auto text-center"
+                    *ngIf="obj.type === 1; else dubbel"
+                  >
+                    <div
+                      class=""
+                      *ngIf="
+                        selectedRobotProgramma !== null &&
+                        selectedRobotProgramma.malCompleet != null &&
+                        selectedRobotProgramma.id === obj.id
+                      "
+                    >
+                      <!--Status OK-->
+                      <i
+                        *ngIf="
+                          selectedRobotProgramma.malCompleet
+                            .basedataVersieStatus == 1;
+                          else elseCompleet
+                        "
+                        class="material-icons smallThumb text-success"
+                        >thumb_up</i
+                      >
+                      <!--Status Niet OK-->
+                      <ng-template #elseCompleet>
+                        <i class="material-icons smallThumb text-warning"
+                          >error</i
+                        >
+                      </ng-template>
+                    </div>
+
+                    <div class="" *ngIf="obj.malCompleet !== null">
+                      <i class="material-icons PootIcon">space_bar</i>
+                    </div>
+                    <div *ngIf="obj.malCompleet !== null">
+                      {{ obj.malCompleet.baseDataProductArtikelCode }}
+                    </div>
+                  </div>
+
+                  <!--Dubbele opleg-->
+                  <!--Dubbele opleg-->
+                  <!--Dubbele opleg-->
+                  <ng-template #dubbel>
+                    <div class="col-lg-6 my-auto text-center border-right">
+                      <!--Status Sign-->
+                      <div
+                        class=""
+                        *ngIf="
+                          selectedRobotProgramma != null &&
+                          selectedRobotProgramma.malLinks !== null &&
+                          selectedRobotProgramma.id === obj.id
+                        "
+                      >
+                        <!--Status OK-->
+                        <i
+                          *ngIf="
+                            selectedRobotProgramma.malLinks
+                              .basedataVersieStatus == 1;
+                            else elseLinks
+                          "
+                          class="material-icons smallThumb text-success"
+                          >thumb_up</i
+                        >
+                        <!--Status Niet OK-->
+                        <ng-template #elseLinks>
+                          <i class="material-icons smallThumb text-warning"
+                            >error</i
+                          >
+                        </ng-template>
+                      </div>
+
+                      <!--Mal Logo-->
+                      <div *ngIf="obj.malLinks !== null">
+                        <i class="material-icons PootIcon">space_bar</i>
+                      </div>
+                      <div *ngIf="obj.malLinks !== null">
+                        {{ obj.malLinks.baseDataProductArtikelCode }}
+                      </div>
+                    </div>
+
+                    <div class="col-lg-6 my-auto text-center border-left">
+                      <!--Status Sign-->
+                      <div
+                        class=""
+                        *ngIf="
+                          selectedRobotProgramma != null &&
+                          selectedRobotProgramma.malRechts !== null &&
+                          selectedRobotProgramma.id === obj.id
+                        "
+                      >
+                        <!--Status OK-->
+                        <i
+                          *ngIf="
+                            selectedRobotProgramma.malRechts
+                              .basedataVersieStatus == 1;
+                            else elseRechts
+                          "
+                          class="material-icons smallThumb text-success"
+                          >thumb_up</i
+                        >
+                        <!--Status Niet OK-->
+                        <ng-template #elseRechts>
+                          <i class="material-icons smallThumb text-warning"
+                            >error</i
+                          >
+                        </ng-template>
+                      </div>
+
+                      <!-- Mal Logo -->
+                      <div *ngIf="obj.malRechts !== null">
+                        <i class="material-icons PootIcon">space_bar</i>
+                      </div>
+                      <div *ngIf="obj.malRechts !== null">
+                        {{ obj.malRechts.baseDataProductArtikelCode }}
+                      </div>
+                    </div>
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--Kolom met details van geselecteed robot programma-->
+    <div
+      class="col-md-9"
+      *ngIf="selectedRobotProgramma != null || newObjectInForm"
+    >
+      <div class="container-fluid">
+        <!--Venster Switch Knoppen-->
+        <div class="row p-3">
+          <div class="col-6 my-auto">
+            <button
+              type="button"
+              class="btn btn-outline-info btncol"
+              (click)="BtnAlgemeen()"
+            >
+              Robot Programma Eigenschappen
+            </button>
+          </div>
+          <div class="col-6 my-auto" *ngIf="!newObjectInForm">
+            <button
+              type="button"
+              class="btn btn-outline-info btncol"
+              (click)="BtnBeleg()"
+            >
+              Beleg
+            </button>
+          </div>
+        </div>
+
+        <div class="row">
+          <!--Algemen Formulier-->
+          <div class="col-12" *ngIf="!belegVensterVisible; else belegVisbible">
+            <form [formGroup]="form" (ngSubmit)="Formsubmit()">
+              <fieldset>
+                <legend>Robot Programma Eigenschappen</legend>
+                <div class="form-group row"></div>
+                <!--ID-->
+                <div class="form-group">
+                  <input
+                    type="number"
+                    formControlName="id"
+                    class="form-control"
+                    hidden="true"
+                  />
+                </div>
+
+                <!--Machine-->
+                <div class="form-group">
+                  <input
+                    type="text"
+                    formControlName="machine"
+                    class="form-control"
+                    hidden="true"
+                  />
+                </div>
+
+                <!--naam veld-->
+                <div class="form-group">
+                  <label for="lblBeschrijving">Naam: </label>
+                  <textarea
+                    [ngClass]="{
+                      'is-invalid': form.get('naam').errors
+                    }"
+                    class="form-control"
+                    formControlName="naam"
+                  ></textarea>
+                  <div class="invalid-feedback">Naam verplicht</div>
+                </div>
+
+                <!--omschrijving veld-->
+                <div class="form-group">
+                  <label for="lblBeschrijving">Omschrijving: </label>
+                  <textarea
+                    [ngClass]="{
+                      'is-invalid': form.get('omschrijving').errors
+                    }"
+                    class="form-control"
+                    formControlName="omschrijving"
+                  ></textarea>
+                  <div class="invalid-feedback">Omschrijving verplicht</div>
+                </div>
+
+                <!--roseServerReferentie veld-->
+                <div class="form-group">
+                  <label for="lblNaam"
+                    >Valk Welding Rose Server Referentie
+                  </label>
+                  <input
+                    [ngClass]="{
+                      'is-invalid': form.get('roseServerReferentie').errors
+                    }"
+                    type="text"
+                    formControlName="roseServerReferentie"
+                    class="form-control"
+                    placeholder="Rose Server Referentie"
+                  />
+                  <div class="invalid-feedback">
+                    Rose Server Referentie verplicht
+                  </div>
+                </div>
+
+                <div class="container">
+                  <div class="row">
+                    <!--Type kolom-->
+                    <div class="col-6">
+                      <!--type veld-->
+                      <div class="form-group">
+                        <label for="lblangularComponent">Beleg Type: </label>
+
+                        <select
+                          formControlName="dataType"
+                          [ngClass]="{
+                            'is-invalid': form.get('type').errors
+                          }"
+                          type="text"
+                          formControlName="type"
+                          class="form-control"
+                          placeholder="Type"
+                        >
+                          <option [ngValue]="1">
+                            Enkel
+                          </option>
+                          <option [ngValue]="2">
+                            Dubbel
+                          </option>
+                        </select>
+
+                        <div class="invalid-feedback">
+                          Beleg Type Verplicht
+                        </div>
+                      </div>
+                    </div>
+
+                    <!--Status kolom-->
+                    <div class="col-6">
+                      <!--status veld-->
+                      <div class="form-group">
+                        <label for="lblangularComponent"
+                          >Productie Status:
+                        </label>
+
+                        <select
+                          formControlName="dataType"
+                          [ngClass]="{
+                            'is-invalid': form.get('status').errors
+                          }"
+                          type="number"
+                          formControlName="status"
+                          class="form-control"
+                          placeholder="status"
+                        >
+                          <option [ngValue]="0">
+                            Uitgesloten
+                          </option>
+                          <option [ngValue]="1">
+                            Klaar voor productie
+                          </option>
+                        </select>
+
+                        <div class="invalid-feedback">
+                          Productie Status verplicht
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!--Submit Knop-->
+                <button type="submit" class="btn btn-primary btn-block">
+                  Save
+                </button>
+              </fieldset>
+            </form>
+            <button
+              type="submit"
+              class="btn btn-danger btn-block"
+              *ngIf="selectedRobotProgramma !== null"
+              (click)="DeleteRobotProgramma(selectedRobotProgramma)"
+            >
+              Delete
+            </button>
+          </div>
+
+          <!--Mal beleg-->
+          <ng-template #belegVisbible>
+            <!--Enkel Beleg-->
+            <!--Enkel Beleg-->
+            <!--Enkel Beleg-->
+
+            <div class="col-12" *ngIf="selectedRobotProgramma.type === 1">
+              <div class="container-fluid">
+                <!--Voorbeeld afbeelding-->
+                <div class="row">
+                  <div class="col-12">
+                    <img
+                      src="assets/img/Lascellen/LascelA003/RobotProgrammaBeheerVenster/beleg_enkel.png"
+                    />
+                  </div>
+                </div>
+
+                <div class="row mt-3">
+                  <div class="col-3"></div>
+                  <div class="col-6">
+                    <label>Selecteer Product</label>
+                    <div class="col my-auto">
+                      <button
+                        class="btn btn-block text-left
+                        {{
+                          selectedRobotProgramma != null &&
+                          selectedRobotProgramma.malCompleet != null &&
+                          selectedRobotProgramma.malCompleet
+                            .basedataVersieStatus === 1
+                            ? 'btn-outline-success'
+                            : 'btn-outline-warning'
+                        }}
+
+                        "
+                        type="button"
+                        id="dropdowncompleet"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <div
+                          class="container-fluid"
+                          *ngIf="
+                            selectedRobotProgramma.malCompleet != null;
+                            else elseBlock
+                          "
+                        >
+                          <div
+                            class="row"
+                            *ngIf="selectedRobotProgramma.malCompleet != null"
+                          >
+                            <!--Artikel Code-->
+                            <div class="col-3 my-auto">
+                              {{
+                                selectedRobotProgramma.malCompleet
+                                  .baseDataProductArtikelCode
+                              }}
+                            </div>
+                          </div>
+                        </div>
+                        <ng-template #elseBlock>Selecteer Product</ng-template>
+                      </button>
+
+                      <div
+                        class="dropdown-menu"
+                        aria-labelledby="dropdownMenuButton"
+                      >
+                        <div class="container-fluid">
+                          <div class="row p-1">
+                            <div class="col-12 my-auto">
+                              <table class="table table-hover">
+                                <thead>
+                                  <tr>
+                                    <th scope="col" style="width: 25%;">
+                                      Artikel Code
+                                    </th>
+                                    <th scope="col" style="width: auto;">
+                                      Omschrijving
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr
+                                    onmouseover=""
+                                    style="cursor: pointer;"
+                                    (click)="DeleteMalCompleet()"
+                                  >
+                                    <th scope="row">
+                                      Geen product
+                                    </th>
+                                    <td></td>
+                                  </tr>
+                                  <tr
+                                    onmouseover=""
+                                    style="cursor: pointer;"
+                                    *ngFor="let obj of lstProductenMalComppleet"
+                                    (click)="EditMalCompleetBelegging(obj)"
+                                  >
+                                    <th scope="row">
+                                      {{ obj.artikelCode }}
+                                    </th>
+                                    <td>
+                                      {{ obj.omschrijving }}
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3"></div>
+                </div>
+              </div>
+            </div>
+
+            <!--Dubbel beleg-->
+            <!--Dubbel beleg-->
+            <!--Dubbel beleg-->
+            <div class="col-12" *ngIf="selectedRobotProgramma.type === 2">
+              <div class="container-fluid">
+                <!--Voorbeeld afbeelding-->
+                <div class="row">
+                  <div class="col-12">
+                    <img
+                      src="assets/img/Lascellen/LascelA003/RobotProgrammaBeheerVenster/beleg_dubbel.png"
+                    />
+                  </div>
+                </div>
+
+                <div class="row mt-3">
+                  <div class="col-6">
+                    <label>Selecteer Product Links</label>
+                    <div class="col my-auto">
+                      <button
+                        class="btn btn-block text-left
+                        {{
+                          selectedRobotProgramma != null &&
+                          selectedRobotProgramma.malLinks != null &&
+                          selectedRobotProgramma.malLinks
+                            .basedataVersieStatus === 1
+                            ? 'btn-outline-success'
+                            : 'btn-outline-warning'
+                        }}
+
+
+
+                      "
+                        type="button"
+                        id="dropdownlinks"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <div
+                          class="container-fluid"
+                          *ngIf="
+                            selectedRobotProgramma.malLinks != null;
+                            else elseLinks
+                          "
+                        >
+                          <div
+                            class="row"
+                            *ngIf="selectedRobotProgramma.malLinks != null"
+                          >
+                            <!--Artikel Code-->
+                            <div class="col-3 my-auto">
+                              {{
+                                selectedRobotProgramma.malLinks
+                                  .baseDataProductArtikelCode
+                              }}
+                            </div>
+                          </div>
+                        </div>
+                        <ng-template #elseLinks
+                          >Selecteer Product Links</ng-template
+                        >
+                      </button>
+
+                      <div
+                        class="dropdown-menu"
+                        aria-labelledby="dropdownMenuButton"
+                      >
+                        <div class="container-fluid">
+                          <div class="row p-1">
+                            <div class="col-12 my-auto">
+                              <table class="table table-hover">
+                                <thead>
+                                  <tr>
+                                    <th scope="col" style="width: 25%;">
+                                      Artikel Code
+                                    </th>
+                                    <th scope="col" style="width: auto;">
+                                      Omschrijving
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr
+                                    onmouseover=""
+                                    style="cursor: pointer;"
+                                    (click)="DeleteMalLinks()"
+                                  >
+                                    <th scope="row">
+                                      Geen product
+                                    </th>
+                                    <td></td>
+                                  </tr>
+                                  <tr
+                                    onmouseover=""
+                                    style="cursor: pointer;"
+                                    *ngFor="let obj of lstProductenMalLinks"
+                                    (click)="EditMalLinks(obj)"
+                                  >
+                                    <th scope="row">
+                                      {{ obj.artikelCode }}
+                                    </th>
+                                    <td>
+                                      {{ obj.omschrijving }}
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <label>Selecteer Product Rechts</label>
+                    <div class="col my-auto">
+                      <button
+                        class="btn btn-block text-left
+                        {{
+                          selectedRobotProgramma != null &&
+                          selectedRobotProgramma.malRechts != null &&
+                          selectedRobotProgramma.malRechts
+                            .basedataVersieStatus === 1
+                            ? 'btn-outline-success'
+                            : 'btn-outline-warning'
+                        }}
+
+                        "
+                        type="button"
+                        id="dropdownrechts"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <div
+                          class="container-fluid"
+                          *ngIf="
+                            selectedRobotProgramma.malRechts != null;
+                            else elseRechts
+                          "
+                        >
+                          <div
+                            class="row"
+                            *ngIf="selectedRobotProgramma.malRechts != null"
+                          >
+                            <!--Artikel Code-->
+                            <div class="col-3 my-auto">
+                              {{
+                                selectedRobotProgramma.malRechts
+                                  .baseDataProductArtikelCode
+                              }}
+                            </div>
+                          </div>
+                        </div>
+                        <ng-template #elseRechts
+                          >Selecteer Product Rechts</ng-template
+                        >
+                      </button>
+
+                      <div
+                        class="dropdown-menu"
+                        aria-labelledby="dropdownMenuButton"
+                      >
+                        <div class="container-fluid">
+                          <div class="row p-1">
+                            <div class="col-12 my-auto">
+                              <table class="table table-hover">
+                                <thead>
+                                  <tr>
+                                    <th scope="col" style="width: 25%;">
+                                      Artikel Code
+                                    </th>
+                                    <th scope="col" style="width: auto;">
+                                      Omschrijving
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr
+                                    onmouseover=""
+                                    style="cursor: pointer;"
+                                    (click)="DeleteMalRechts()"
+                                  >
+                                    <th scope="row">
+                                      Geen product
+                                    </th>
+                                    <td></td>
+                                  </tr>
+                                  <tr
+                                    onmouseover=""
+                                    style="cursor: pointer;"
+                                    *ngFor="let obj of lstProductenMalRechts"
+                                    (click)="EditMalRechts(obj)"
+                                  >
+                                    <th scope="row">
+                                      {{ obj.artikelCode }}
+                                    </th>
+                                    <td>
+                                      {{ obj.omschrijving }}
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

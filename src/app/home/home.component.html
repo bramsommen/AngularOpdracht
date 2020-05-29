@@ -1,0 +1,23 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3 p-4" *ngFor="let app of Apps">
+      <div
+        class="card text-white bg-success"
+        style="cursor: pointer;"
+        (click)="openApp(app)"
+      >
+        <span
+          class="material-icons  align-middle text-center"
+          style="font-size:50px"
+          >dvr</span
+        >
+        <div class="card-header h4 text-center">{{ app.naam }}</div>
+        <div class="card-body">
+          <p class="card-text">
+            {{ app.omschrijving }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

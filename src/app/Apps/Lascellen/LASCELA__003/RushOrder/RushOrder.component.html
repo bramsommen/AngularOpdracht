@@ -1,0 +1,474 @@
+<!--Header-->
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-6"><h3 class="text-center p-3">Rush Order</h3></div>
+    <div class="col-lg-1 smallText text-center">
+      <i
+        class="material-icons align-middle d-block
+      {{ liveUI.klaar === true && 'text-success' }}"
+        >done</i
+      >
+      <span>Klaar</span>
+    </div>
+    <div class="col-lg-1 smallText text-center">
+      <i
+        class="material-icons align-middle d-block
+      {{ liveUI.inUitvoering === true && 'text-success' }}"
+        >camera</i
+      >
+      <span>In Uitvoering</span>
+    </div>
+    <div class="col-lg-1 smallText text-center">
+      <i
+        class="material-icons align-middle d-block
+      {{ liveUI.afgewerkt === true && 'text-success' }}"
+        >done_all</i
+      >
+      <span>Afgewerkt</span>
+    </div>
+    <div class="col-lg-1 smallText text-center">
+      <i
+        class="material-icons align-middle d-block
+      {{ liveUI.gekopieerd === true && 'text-success' }}"
+        >find_replace</i
+      >
+      <span>Gekopieerd</span>
+    </div>
+    <div class="col-lg-1 smallText text-center">
+      <i
+        class="material-icons align-middle d-block
+      {{ liveUI.doorgestuurd === true && 'text-success' }}"
+        >exit_to_app</i
+      >
+      <span>Doorgestuurd</span>
+    </div>
+    <div class="col-lg-1 smallText text-center">
+      <i
+        class="material-icons align-middle d-block
+      {{ liveUI.verwerkt === true && 'text-success' }}"
+        >gavel</i
+      >
+      <span>Verwerkt</span>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row" style="height: 75px;">
+    <!--Actueel beleg-->
+    <div
+      class="col-5 actueelBorder border-info bg-success {{
+        StatusText() !== 'Klaar' && 'bg-warning'
+      }}"
+    >
+      <h3 class="verticalCenter text-center">{{ StatusText() }}</h3>
+    </div>
+    <!--Reload Product-->
+    <div class="col-1 actueelBorder border-info m-0 p-0">
+      <button
+        *ngIf="ReloadMal === 0"
+        type="button"
+        class="btn btn-block"
+        style="cursor: pointer;"
+        (click)="SetReloadMal()"
+      >
+        <i class="material-icons align-middle text-success">autorenew</i>
+      </button>
+    </div>
+
+    <div class="col-6 actueelBorder border-info">
+      <!--Actueel weergeven malcompleet-->
+      <div *ngIf="ManueelBelgType == 3; else DuoActueel">
+        <div class="row">
+          <div class="col-12 text-center">
+            Mal Volledig
+          </div>
+        </div>
+        <div class="row verticalCenter">
+          <div class="col-12">
+            <h3 class="text-center">
+              {{ ManueelBelegCompleet }}
+            </h3>
+          </div>
+        </div>
+      </div>
+
+      <!--Actueel weergeven mal duo L of R of L-->
+      <ng-template #DuoActueel>
+        <div>
+          <div class="row">
+            <div class="col-6 text-center">
+              Links
+            </div>
+            <div class="col-6 text-center">
+              Rechts
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6 text-center">
+              <h3>{{ ManueelBelegLinks }}</h3>
+            </div>
+            <div class="col-6 text-center">
+              <h3>{{ ManueelBelegRechts }}</h3>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>
+
+<hr class="m-0" />
+
+<!-- Dropdown Selecteer Artikel code-->
+<div class="container-fluid dropdown p-1">
+  <input
+    type="text"
+    class="form-control"
+    data-toggle="dropdown"
+    placeholder="Selecteer Artikel Code..."
+    value="{{ selectedArtikelCode }}"
+    [(ngModel)]="zoekString"
+    style="cursor: pointer;"
+  />
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12 my-auto">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col" class="p-2" style="width: 25%;">
+                  Artikel Code
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                onmouseover=""
+                style="cursor: pointer;"
+                *ngFor="let obj of lstArtikelCodes | filter: zoekString"
+                (click)="SelectArtikelCode(obj)"
+              >
+                <td class="p-2">
+                  {{ obj }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<hr class="m-3" />
+
+<!-- Overzicht beschikbare robot programa's-->
+<div class="container-fluid" *ngIf="selectedArtikelCode !== null">
+  <table class="table table-hover table-bordered table-dark">
+    <thead>
+      <tr>
+        <th class="p-1" scope="col" style="max-width: 15%;">Naam</th>
+        <th class="p-1" scope="col" style="max-width: 25%;">
+          Robot Programma
+        </th>
+        <th class="text-center p-1" scope="col" style="width: auto;">
+          Beleg
+        </th>
+      </tr>
+    </thead>
+    <!--TABEL INHOUD-->
+    <tbody>
+      <!--RIJEN-->
+      <tr
+        style="cursor: pointer;"
+        *ngFor="let obj of lstRobotProgrammas"
+        (click)="SelectRobotProgramma(obj)"
+      >
+        <td class="align-middle p-0" style="max-width: 15%;">
+          {{ obj.naam }}
+        </td>
+        <td class="align-middle p-0" style="max-width: 15%;">
+          <!--Thumb Robot Proramma     -->
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-2 my-auto text-center">
+                <div>
+                  <!--Status OK-->
+                  <i
+                    *ngIf="obj.status == 1; else elseRbtProgStatus"
+                    class="material-icons smallThump text-success"
+                    >thumb_up</i
+                  >
+                  <!--Status Niet OK-->
+                  <ng-template #elseRbtProgStatus>
+                    <i class="material-icons smallThump text-warning">error</i>
+                  </ng-template>
+                </div>
+              </div>
+              <div class="col-lg-10">
+                {{ obj.roseServerReferentie }}
+              </div>
+            </div>
+          </div>
+        </td>
+        <td class="align-middle p-0">
+          <div class="container mb-md-2">
+            <div class="row">
+              <!--Enkele opleg-->
+              <!--Enkele opleg-->
+              <!--Enkele opleg-->
+
+              <!--Thumb Totaal-->
+              <div class="col-lg-2 my-auto text-center" *ngIf="obj.type === 1">
+                <div *ngIf="obj.malCompleet != null">
+                  <!--Status OK-->
+                  <i
+                    *ngIf="
+                      obj.malCompleet.basedataVersieStatus == 1;
+                      else elseCompleet
+                    "
+                    class="material-icons smallThump text-success"
+                    >thumb_up</i
+                  >
+                  <!--Status Niet OK-->
+                  <ng-template #elseCompleet>
+                    <i class="material-icons smallThump text-warning">error</i>
+                  </ng-template>
+                </div>
+              </div>
+
+              <div
+                class="col-lg-10 my-auto text-center"
+                *ngIf="obj.type === 1; else dubbel"
+              >
+                <div *ngIf="obj.malCompleet != null">
+                  <i class="material-icons PootIcon">space_bar</i>
+                </div>
+                <div *ngIf="obj.malCompleet != null">
+                  {{ obj.malCompleet.baseDataProductArtikelCode }}
+                </div>
+              </div>
+
+              <!--Dubbele opleg-->
+              <!--Dubbele opleg-->
+              <!--Dubbele opleg-->
+              <ng-template #dubbel>
+                <!--Thumb links-->
+                <div class="col-lg-2 my-auto text-center">
+                  <div *ngIf="obj.malLinks != null">
+                    <!--Status OK-->
+                    <i
+                      *ngIf="
+                        obj.malLinks.basedataVersieStatus == 1;
+                        else elseLinks
+                      "
+                      class="material-icons smallThump text-success"
+                      >thumb_up</i
+                    >
+                    <!--Status Niet OK-->
+                    <ng-template #elseLinks>
+                      <i class="material-icons smallThump text-warning"
+                        >error</i
+                      >
+                    </ng-template>
+                  </div>
+                </div>
+
+                <div class="col-lg-4 my-auto text-center">
+                  <div *ngIf="obj.malLinks != null">
+                    <i class="material-icons PootIcon">space_bar</i>
+                  </div>
+                  <div *ngIf="obj.malLinks != null">
+                    {{ obj.malLinks.baseDataProductArtikelCode }}
+                  </div>
+                </div>
+
+                <!--Thumb Rechts-->
+                <div class="col-lg-2 my-auto text-center border-left">
+                  <div *ngIf="obj.malRechts != null">
+                    <!--Status OK-->
+                    <i
+                      *ngIf="
+                        obj.malRechts.basedataVersieStatus == 1;
+                        else elseRechts
+                      "
+                      class="material-icons smallThump text-success"
+                      >thumb_up</i
+                    >
+                    <!--Status Niet OK-->
+                    <ng-template #elseRechts>
+                      <i class="material-icons smallThump text-warning"
+                        >error</i
+                      >
+                    </ng-template>
+                  </div>
+                </div>
+
+                <div class="col-lg-4 my-auto text-center">
+                  <div *ngIf="obj.malRechts != null">
+                    <i class="material-icons PootIcon">space_bar</i>
+                  </div>
+                  <div *ngIf="obj.malRechts != null">
+                    {{ obj.malRechts.baseDataProductArtikelCode }}
+                  </div>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <hr class="m-0" />
+</div>
+
+<!--Weergave mal layout-->
+<div *ngIf="selectedRobotProgramma !== null">
+  <!--Compleet Beleg-->
+  <div *ngIf="selectedRobotProgramma.type === 1" class="malContainer">
+    <img
+      src="assets/img/Lascellen/LascelA003/RushOrderVenster/beleg_compleet.png"
+    />
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="card border-primary mb-3">
+            <div class="card-header text-center">
+              Mal beleg "Enkel Volledig"
+            </div>
+            <div class="card-body text-center">
+              <h4 class="card-title">
+                {{
+                  selectedRobotProgramma.malCompleet.baseDataProductArtikelCode
+                }}
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="selectedRobotProgramma.type === 2">
+    <!--Dubbel beleg Afbeelding-->
+    <div
+      *ngIf="
+        selectedRobotProgramma.malLinks !== null &&
+        selectedRobotProgramma.malRechts !== null
+      "
+      class="malContainer"
+    >
+      <img
+        src="assets/img/Lascellen/LascelA003/RushOrderVenster/beleg_duo_duo.png"
+      />
+      <div class="container">
+        <div class="row">
+          <div class="col-6">
+            <div class="card border-primary mb-3">
+              <div class="card-header text-center">Mal beleg "Links"</div>
+              <div class="card-body text-center">
+                <h4 class="card-title">
+                  {{
+                    selectedRobotProgramma.malLinks.baseDataProductArtikelCode
+                  }}
+                </h4>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="card border-primary mb-3">
+              <div class="card-header text-center">Mal beleg "Rechts"</div>
+              <div class="card-body text-center">
+                <h4 class="card-title">
+                  {{
+                    selectedRobotProgramma.malRechts.baseDataProductArtikelCode
+                  }}
+                </h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--Links beleg Afbeelding-->
+
+    <div
+      *ngIf="
+        selectedRobotProgramma.malLinks !== null &&
+        selectedRobotProgramma.malRechts === null
+      "
+      class="malContainer"
+    >
+      <img
+        src="assets/img/Lascellen/LascelA003/RushOrderVenster/beleg_duo_links.png"
+      />
+      <div class="container">
+        <div class="row">
+          <div class="col-6">
+            <div class="card border-primary mb-3">
+              <div class="card-header text-center">
+                Mal beleg "Enkel Links"
+              </div>
+              <div class="card-body text-center">
+                <h4 class="card-title">
+                  {{
+                    selectedRobotProgramma.malLinks.baseDataProductArtikelCode
+                  }}
+                </h4>
+              </div>
+            </div>
+          </div>
+          <div class="col-6"></div>
+        </div>
+      </div>
+    </div>
+
+    <!--Rechts beleg Afbeelding-->
+
+    <div
+      *ngIf="
+        selectedRobotProgramma.malLinks === null &&
+        selectedRobotProgramma.malRechts !== null
+      "
+      class="malContainer"
+    >
+      <img
+        src="assets/img/Lascellen/LascelA003/RushOrderVenster/beleg_duo_rechts.png"
+      />
+      <div class="container">
+        <div class="row">
+          <div class="col-6"></div>
+          <div class="col-6">
+            <div class="card border-primary mb-3">
+              <div class="card-header text-center">
+                Mal beleg "Enkel Rechts"
+              </div>
+              <div class="card-body text-center">
+                <h4 class="card-title">
+                  {{
+                    selectedRobotProgramma.malRechts.baseDataProductArtikelCode
+                  }}
+                </h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Knop doorsturen naar productie-->
+<div class="malContainer" *ngIf="selectedRobotProgramma != null">
+  <button
+    type="button"
+    class="btn btn-success btn-block"
+    style="cursor: pointer;"
+    (click)="StartProductie()"
+  >
+    <i class="material-icons align-middle">play_circle_outline</i> Start
+    productie
+  </button>
+</div>

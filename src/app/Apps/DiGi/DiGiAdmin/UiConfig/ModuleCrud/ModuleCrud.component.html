@@ -1,0 +1,168 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm">
+      <div class="container-fluid">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Naam</th>
+              <th scope="col">Omschrijving</th>
+              <th scope="col">Angular Component pad</th>
+            </tr>
+          </thead>
+          <tbody *ngFor="let obj of lstModules">
+            <tr>
+              <th scope="row">{{ obj.naam }}</th>
+              <td>{{ obj.omschrijving }}</td>
+              <td>{{ obj.angularComponent }}</td>
+              <td>
+                <button
+                  (click)="GetRoleTags(obj)"
+                  type="button"
+                  class="btn btn-warning"
+                >
+                  <i class="material-icons small">person_add</i>
+                </button>
+              </td>
+              <td>
+                <button
+                  (click)="LoadUpdate(obj)"
+                  type="button"
+                  class="btn btn-warning"
+                >
+                  <i class="material-icons small">edit</i>
+                </button>
+              </td>
+              <td>
+                <button
+                  (click)="Delete(obj)"
+                  type="button"
+                  class="btn btn-danger"
+                >
+                  <i class="material-icons small">clear</i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="col-sm">
+      <button (click)="New()" type="button" class="btn btn-success">
+        Nieuwe module
+      </button>
+
+      <div class="container-fluid" *ngIf="formVisible">
+        <form [formGroup]="form" (ngSubmit)="Formsubmit()">
+          <fieldset>
+            <legend>Module</legend>
+            <div class="form-group row"></div>
+            <!--ID-->
+            <div class="form-group">
+              <input
+                type="number"
+                formControlName="id"
+                class="form-control"
+                hidden="true"
+              />
+            </div>
+
+            <!--Naam veld-->
+            <div class="form-group">
+              <label for="lblNaam">Module Naam: </label>
+              <input
+                [ngClass]="{
+                  'is-invalid': form.get('naam').errors
+                }"
+                type="text"
+                formControlName="naam"
+                class="form-control"
+                placeholder="Module Naam"
+              />
+              <div class="invalid-feedback">Naam verplicht</div>
+            </div>
+
+            <!--Beschrijkving veld-->
+            <div class="form-group">
+              <label for="lblBeschrijving">Omschrijving: </label>
+              <textarea
+                [ngClass]="{
+                  'is-invalid': form.get('omschrijving').errors
+                }"
+                class="form-control"
+                formControlName="omschrijving"
+              ></textarea>
+              <div class="invalid-feedback">Omschrijving verplicht</div>
+            </div>
+
+            <!--Beschrijkving veld-->
+            <div class="form-group">
+              <label for="lblangularComponent">angularComponent: </label>
+              <input
+                [ngClass]="{
+                  'is-invalid': form.get('angularComponent').errors
+                }"
+                type="text"
+                formControlName="angularComponent"
+                class="form-control"
+                placeholder="angularComponent"
+              />
+              <div class="invalid-feedback">Component Path verplicht</div>
+            </div>
+
+            <!--Beschrijkving veld-->
+            <div class="form-group">
+              <label for="lbldedicatedPc">dedicatedPc: </label>
+              <input
+                [ngClass]="{
+                  'is-invalid': form.get('dedicatedPc').errors
+                }"
+                type="text"
+                formControlName="dedicatedPc"
+                class="form-control"
+                placeholder="dedicatedPc"
+              />
+            </div>
+
+            <!--Submit Knop-->
+            <button type="submit" class="btn btn-primary btn-block">
+              Save
+            </button>
+          </fieldset>
+        </form>
+      </div>
+      <div class="container-fluid" *ngIf="RoleTagsVisible">
+        <legend>Role Tags:</legend>
+
+        <div
+          class="alert alert-dismissible alert-light"
+          *ngFor="let roleTag of roleTagsFromModule"
+        >
+          <button type="button" class="close" (click)="DeleteRoleTag(roleTag)">
+            &times;
+          </button>
+          <strong>{{ roleTag.roleTag.naam }}</strong>
+        </div>
+
+        <a
+          class="nav-link dropdown-toggle"
+          data-toggle="dropdown"
+          href="#"
+          role="button"
+          aria-haspopup="true"
+          aria-expanded="false"
+          >Role Tag Toevoegen</a
+        >
+        <div class="dropdown-menu" style="">
+          <a
+            class="dropdown-item"
+            *ngFor="let roleTag of allRoleTags"
+            (click)="AddRoleTagToModule(roleTag)"
+            >{{ roleTag.naam }}</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

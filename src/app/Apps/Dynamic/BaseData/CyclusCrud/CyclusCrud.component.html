@@ -1,0 +1,335 @@
+<app-MachineOnderdeelSelector
+  (selectMachineOnderdeel)="selectMachineOnderdeel($event)"
+>
+  ></app-MachineOnderdeelSelector
+>
+
+<div class="container-fluid" *ngIf="selectedMachineOnderdeel != null">
+  <div class="row">
+    <div class="col-12">
+      <button (click)="New()" type="button" class="btn btn-success">
+        Nieuwe Cyclus
+      </button>
+
+      <form [formGroup]="form" (ngSubmit)="Formsubmit()" *ngIf="formVisible">
+        <fieldset>
+          <legend>Aanmaken nieuwe cyclus</legend>
+
+          <div class="form-group row"></div>
+
+          <!--Naam veld-->
+          <div class="form-group">
+            <label for="lblNaam">Nieuwe Maak Cyclus</label>
+            <input
+              [ngClass]="{
+                'is-invalid': form.get('naam').errors
+              }"
+              type="text"
+              formControlName="naam"
+              class="form-control"
+              placeholder="Naam"
+            />
+            <div class="invalid-feedback">Naam verplicht</div>
+          </div>
+
+          <div class="form-group">
+            <label for="lbldedicatedPc">Cyclus Type: </label>
+            <select
+              [ngClass]="{
+                'is-invalid': form.get('cyclusTypeID').errors
+              }"
+              formControlName="cyclusTypeID"
+              type="number"
+              class="form-control"
+            >
+              <option *ngFor="let obj of lstCyclusType" [ngValue]="obj.id">{{
+                obj.naam
+              }}</option>
+            </select>
+            <div class="invalid-feedback">Cyclus Type Verplicht</div>
+          </div>
+
+          <!--Submit Knop-->
+          <button type="submit" class="btn btn-primary btn-block">
+            Opslaan
+          </button>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="selectedCyclusMaakInstelling != null">
+    <div class="col-12">
+      <form
+        [formGroup]="formCyclusMaakInstelling"
+        (ngSubmit)="SaveCyclusMaakInstellingFormSubmit()"
+      >
+        <fieldset>
+          <legend>Update cyclus maakinstelling</legend>
+          <div class="form-group row"></div>
+
+          <!--Naam veld-->
+          <div class="form-group">
+            <label
+              for="lblNaam"
+              *ngIf="selectedCyclusMaakInstelling.maakInstelling != null"
+              >Statische Waarde ({{
+                selectedCyclusMaakInstelling.maakInstelling.dataType
+              }})</label
+            >
+            <input
+              [ngClass]="{
+                'is-invalid': formCyclusMaakInstelling.get('staticWaarde')
+                  .errors
+              }"
+              type="text"
+              formControlName="staticWaarde"
+              class="form-control"
+              placeholder="staticWaarde"
+            />
+            <div class="invalid-feedback">staticWaarde verplicht</div>
+          </div>
+
+          <div class="form-group">
+            <label for="lbldedicatedPc">Product Eigenschap: </label>
+            <select
+              [ngClass]="{
+                'is-invalid': formCyclusMaakInstelling.get('eigenschapID')
+                  .errors
+              }"
+              formControlName="eigenschapID"
+              type="number"
+              class="form-control"
+            >
+              <option [ngValue]="null">Static Waarde</option>
+
+              <option
+                *ngFor="let obj of lstEigenschappenVanType"
+                [ngValue]="obj.id"
+                >{{ obj.naam }}</option
+              >
+            </select>
+            <div class="invalid-feedback">eigenschapID Verplicht</div>
+          </div>
+
+          <!--Submit Knop-->
+          <button type="submit" class="btn btn-primary btn-block">
+            Opslaan
+          </button>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <button
+        class="btn btn-outline-success btn-block dropdown-toggle text-left"
+        type="button"
+        id="dropdownMenuButton"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        Selecteer Cyclus
+      </button>
+
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <div class="container-fluid">
+          <div class="row p-1" *ngFor="let obj of lstCyclus">
+            <div class="col-5 my-auto">
+              <button
+                type="button"
+                class="btn btn-secondary btn-block text-left"
+                (click)="SelectCycle(obj)"
+              >
+                {{ obj.naam }}
+              </button>
+            </div>
+
+            <div class="col-3 my-auto">
+              <button
+                type="button"
+                class="btn btn-secondary btn-block text-left"
+                (click)="SelectCycle(obj)"
+              >
+                {{ obj.cyclusType.naam }}
+              </button>
+            </div>
+            <!--Clone Knop-->
+            <div class="col-1">
+              <button
+                (click)="CloneCyclus(obj)"
+                type="button"
+                class="btn btn-success"
+              >
+                <i class="material-icons small">library_add</i>
+              </button>
+            </div>
+            <!--Edit Knop-->
+            <div class="col-1">
+              <button
+                (click)="LoadUpdateCyclus(obj)"
+                type="button"
+                class="btn btn-warning"
+              >
+                <i class="material-icons small">edit</i>
+              </button>
+            </div>
+
+            <!--Delete Knop-->
+            <div class="col-1">
+              <button
+                type="button"
+                class="btn btn-outline-danger btn-block"
+                (click)="DeleteCycle(obj)"
+              >
+                &times;
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-fluid" *ngIf="selectedCyclus != null">
+  <div class="row">
+    <div class="col-md-12 p-2 text-center">
+      <h3>
+        Cyclus <strong>"{{ selectedCyclus.naam }}"</strong> volgorde:
+      </h3>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th class="p-1" style="width: 3%;">Stap</th>
+            <th class="p-1" style="width: 3%;">SubStap</th>
+            <th class="p-1" style="width: 5%;" scope="col">Omhoog</th>
+            <th class="p-1" style="width: 5%;" scope="col">Omlaag</th>
+            <th class="p-1" style="width: 5%;" scope="col">Koppel</th>
+            <th class="p-1" style="width: auto;" scope="col">Naam</th>
+            <th class="p-1" style="width: 20%;" scope="col">Data Type</th>
+            <th class="p-1" style="width: 20%;" scope="col">Static Waarde</th>
+            <th class="p-1" style="width: 20%;" scope="col">
+              Product Eigenschap
+            </th>
+            <th class="p-1" style="width: 5%;" scope="col">Edit</th>
+            <th class="p-1" style="width: 5%;" scope="col">Verwijderen</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let obj of lstCyclusMaakInstellingen">
+            <td
+              class="p-1 text-center align-middle {{
+                obj.stap % 2 == 0 && 'bg-dark text-white'
+              }} "
+            >
+              {{ obj.stap }}
+            </td>
+            <td>
+              {{ obj.childStapVolgorde }}
+            </td>
+            <td class="p-1 text-center align-middle">
+              <button
+                *ngIf="obj.childStap < 2"
+                (click)="MoveChildUp(obj)"
+                type="button"
+                class="btn btn-info"
+              >
+                <i class="material-icons small">expand_less</i>
+              </button>
+            </td>
+            <td class="p-1 text-center align-middle">
+              <button
+                *ngIf="obj.childStap < 2"
+                (click)="MoveChildDown(obj)"
+                type="button"
+                class="btn btn-info"
+              >
+                <i class="material-icons small">expand_more</i>
+              </button>
+            </td>
+
+            <td class="p-1 text-center align-middle">
+              <button
+                (click)="AttachMaakInstelling(obj)"
+                type="button"
+                class="btn
+                {{ obj.childStap == 0 && 'btn-outline-secondary' }}
+                {{ obj.childStap >= 1 && 'btn-outline-warning' }}
+                "
+              >
+                <i class="material-icons small" *ngIf="obj.childStap == 0"
+                  >attach_file</i
+                >
+                <i class="material-icons small" *ngIf="obj.childStap >= 1"
+                  >attachment</i
+                >
+              </button>
+            </td>
+
+            <td class="p-1 align-middle" *ngIf="obj.maakInstelling">
+              {{ obj.maakInstelling.naam }}
+            </td>
+            <td class="p-1 align-middle" *ngIf="obj.maakInstelling">
+              {{ obj.maakInstelling.dataType }}
+            </td>
+            <td class="p-1 align-middle">{{ obj.staticWaarde }}</td>
+            <td class="p-1 align-middle">
+              <span *ngIf="obj.productEigenschap != null">{{
+                obj.productEigenschap.naam
+              }}</span>
+            </td>
+
+            <td class="p-1 align-middle">
+              <button
+                (click)="LoadCyclusMaakForm(obj)"
+                type="button"
+                class="btn btn-warning"
+              >
+                <i class="material-icons small">edit</i>
+              </button>
+            </td>
+
+            <td class="p-1 text-center align-middle">
+              <button
+                (click)="DeleteCyclusMaakInstelling(obj)"
+                type="button"
+                class="btn btn-danger"
+              >
+                <i class="material-icons small">clear</i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="dropdown">
+        <button
+          class="btn btn-outline-success dropdown-toggle btn-block text-left"
+          type="button"
+          id="dropdownMenuButton"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          Maak Instelling toevoegen
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a
+            class="dropdown-item"
+            style="cursor: pointer;"
+            *ngFor="let obj of lstMaakInstellingen"
+            (click)="AddCyclusMaakInstelling(obj)"
+            >{{ obj.naam }}: {{ obj.dataType }}</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

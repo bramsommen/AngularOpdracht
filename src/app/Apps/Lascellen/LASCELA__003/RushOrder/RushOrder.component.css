@@ -1,0 +1,67 @@
+.objectListScrollBox {
+  height: 80vh;
+  overflow: auto;
+}
+
+.smallText {
+  font-size: smaller;
+}
+
+.material-icons {
+  font-size: 40px;
+  align-self: center;
+}
+
+.card {
+  cursor: pointer;
+}
+
+.btncol {
+  width: 100%;
+}
+
+.fatBorder {
+  border-width: 2px;
+}
+
+img {
+  max-width: 100%;
+  max-height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block; /* remove extra space below image */
+}
+
+.small {
+  font-size: small;
+}
+
+.PootIcon {
+  transform: rotate(180deg);
+}
+
+.textLine {
+  line-height: 2;
+}
+
+.malContainer {
+  max-width: 50%;
+  margin: 0 auto;
+}
+
+.actueelBorder {
+  border-style: solid;
+  border-width: 5px;
+}
+
+.smallThump {
+  font-size: 25px;
+}
+
+.verticalCenter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}

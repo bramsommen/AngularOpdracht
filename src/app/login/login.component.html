@@ -1,0 +1,122 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm"></div>
+    <div class="col-sm">
+      <form [formGroup]="form" (ngSubmit)="Formsubmit()">
+        <fieldset>
+          <legend>Aanmelden</legend>
+          <div class="form-group row"></div>
+
+          <!--Gebruikersnaam veld-->
+          <div class="form-group">
+            <label for="exampleInputEmail1">Gebruikersnaam: </label>
+            <input
+              [ngClass]="{ 'is-invalid': form.get('naam').errors }"
+              type="text"
+              formControlName="naam"
+              class="form-control"
+              placeholder="Gebruikersnaam (Tiknummer)"
+            />
+            <div class="invalid-feedback">Vul gebruikersnaam in.</div>
+          </div>
+
+          <!--Paswoord Validatie-->
+          <div class="form-group">
+            <label for="exampleInputPassword1">
+              <span *ngIf="formChanger === 0">Paswoord</span>
+              <span *ngIf="formChanger === 1">Oud Paswoord</span>
+              <span *ngIf="formChanger === 2">Nieuw Paswoord</span>
+            </label>
+            <input
+              [ngClass]="{ 'is-invalid': form.get('paswoord').errors }"
+              type="password"
+              formControlName="paswoord"
+              class="form-control"
+              placeholder="paswoord"
+            />
+            <div class="invalid-feedback">Paswoord, minimaal 4 karakters</div>
+          </div>
+
+          <!--Herhaal Paswoord veld-->
+          <div
+            class="form-group"
+            *ngIf="formChanger === 1 || formChanger === 2"
+          >
+            <label for="exampleInputPassword2">
+              <ng-container [ngSwitch]="formChanger">
+                <ng-container *ngSwitchCase="'0'"
+                  ><span>Paswoord</span></ng-container
+                >
+                <ng-container *ngSwitchCase="'2'"
+                  ><span>Nieuw Paswoord</span></ng-container
+                >
+                <ng-container *ngSwitchCase="'3'"
+                  ><span>Herhaal Paswoord</span></ng-container
+                >
+              </ng-container>
+            </label>
+
+            <input
+              type="password"
+              formControlName="paswoord2"
+              class="form-control"
+              placeholder="paswoord"
+            />
+          </div>
+          <!--Submit Knop-->
+          <button type="submit" class="btn btn-primary btn-block">
+            <ng-container [ngSwitch]="formChanger">
+              <ng-container *ngSwitchCase="'0'"
+                ><span>Login</span></ng-container
+              >
+              <ng-container *ngSwitchCase="'1'"
+                ><span>Paswoord Bijwerken</span></ng-container
+              >
+              <ng-container *ngSwitchCase="'2'"
+                ><span>Account Aanmaken</span></ng-container
+              >
+            </ng-container>
+          </button>
+        </fieldset>
+      </form>
+    </div>
+    <div class="col"></div>
+  </div>
+
+  <div class="row p-4">
+    <div class="col-sm"></div>
+    <div class="col-sm text-center">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-6">
+            <button
+              type="button"
+              class="btn btn-outline-info btn-sm  btn-block"
+              (click)="ActiveerPaswoordVeranderen()"
+            >
+              Paswoord veranderen
+            </button>
+          </div>
+          <div class="col-6">
+            <button
+              type="button"
+              class="btn btn-outline-success btn-sm  btn-block"
+              (click)="ActiveerCreateAccount()"
+            >
+              Account aanmaken
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm"></div>
+  </div>
+
+  <div class="row" *ngIf="formChanger === 1 || formChanger === 2">
+    <div class="col-sm"></div>
+    <div class="col-sm text-center">
+      <a href="#" class="card-link">Terug naar Login</a>
+    </div>
+    <div class="col-sm"></div>
+  </div>
+</div>

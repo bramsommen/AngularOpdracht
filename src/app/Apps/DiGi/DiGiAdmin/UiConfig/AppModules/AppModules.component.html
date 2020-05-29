@@ -1,0 +1,170 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-6">
+      <h4 class="text-center">Selecteer App</h4>
+      <hr />
+    </div>
+
+    <div class="col-6">
+      <h4 class="text-center">Beschikbare Modules</h4>
+      <hr />
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-6">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm">
+            <div class="container-fluid">
+              <a
+                class="nav-link dropdown-toggle"
+                data-toggle="dropdown"
+                href="#"
+                role="button"
+                aria-haspopup="true"
+                aria-expanded="false"
+                >Selecteer App:</a
+              >
+              <div class="dropdown-menu">
+                <a
+                  class="dropdown-item"
+                  *ngFor="let app of apps"
+                  (click)="SelectApp(app)"
+                  >{{ app.naam }} - ({{ app.poolnaam }})</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row p-4">
+          <div class="col-sm">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-3" my-auto>
+                  <h4>App:</h4>
+                </div>
+
+                <div class="col-3 my-auto">
+                  <span *ngIf="app !== null">
+                    {{ app.naam }}
+                  </span>
+                </div>
+
+                <div class="col-3 my-auto">
+                  <h4>Module:</h4>
+                </div>
+
+                <div class="col-3 my-auto">
+                  <span *ngIf="activeParentModule !== null">
+                    {{ activeParentModule.naam }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr />
+        </div>
+
+        <div class="row">
+          <div class="col-sm">
+            <button
+              type="button"
+              (click)="LoadHoofdMenu()"
+              class="btn btn-primary btn-lg btn-block"
+            >
+              Hoofd Menu
+            </button>
+            <div class="container-fluid">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Open</th>
+                    <th scope="col">Naam</th>
+                    <th scope="col">Omschrijving</th>
+                    <th scope="col">SortId</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let obj of childModules">
+                    <td>
+                      <button
+                        (click)="SelectParent(obj)"
+                        type="button"
+                        class="btn btn-outline-secondary"
+                      >
+                        <i class="material-icons small">search</i>
+                      </button>
+                    </td>
+                    <th scope="row">{{ obj.module.naam }}</th>
+                    <td>{{ obj.module.omschrijving }}</td>
+                    <td>{{ obj.sortNumber }}</td>
+                    <td>
+                      <button
+                        (click)="MoveChildDown(obj)"
+                        type="button"
+                        class="btn btn-info"
+                      >
+                        <i class="material-icons small">arrow_upward</i>
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        (click)="MoveChildUp(obj)"
+                        type="button"
+                        class="btn btn-info"
+                      >
+                        <i class="material-icons small">arrow_downward</i>
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        (click)="DeleteAppModule(obj)"
+                        type="button"
+                        class="btn btn-danger"
+                      >
+                        <i class="material-icons small">clear</i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="container-fluid">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Add</th>
+              <th scope="col">Naam</th>
+              <th scope="col">Omschrijving</th>
+              <th scope="col">Angular Component pad</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let obj of modules">
+              <td>
+                <button
+                  (click)="AddModuleToParent(obj)"
+                  type="button"
+                  class="btn btn-warning"
+                >
+                  <i class="material-icons small">control_point</i>
+                </button>
+              </td>
+              <th scope="row">{{ obj.naam }}</th>
+              <td>{{ obj.omschrijving }}</td>
+              <td>{{ obj.angularComponent }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
